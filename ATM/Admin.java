@@ -61,7 +61,7 @@ public class Admin{
                 }
                 case 4->{
                         System.out.println("Customer Account:");
-                        this.ViewArray(customArray);
+                        this.ViewArray(customArray);               // calling View Customer
                     }
 
                 case 5->{
@@ -88,7 +88,6 @@ public class Admin{
     }
     public void ViewArray(ArrayList<Customer> customers)
     {
-        customers =customArray;
         for (Customer customer : customers) {
             System.out.println(customer);
         }
