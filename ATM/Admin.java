@@ -7,29 +7,26 @@ public class Admin{
     private static String AD_pass="Gokul@2715";
     public static boolean run =true;
     private static Scanner scanner =new Scanner(System.in);
-    private ArrayList<Customer> customArray =new ArrayList<>();
-
+    private ArrayList<Customer> AC=new ArrayList<>();
     public static void CheckAdmin(String In_Id,String In_pass){
         if(In_Id.equals(AD_Id)){
-            int attempt=1;
-            while (attempt<=3){
+            int attempt=0;
+            while (attempt<3){
+                attempt++;
                 if (In_pass.equals((AD_pass))) {
                     System.out.println("Your are Login Successfully!");
                     System.out.printf("Welcome %s!%n", ADname);
                     Admin admin = new Admin();
                     admin.ADLogin();
                     break;
-                } else {
+                } else{
+                    System.out.printf("%d No of Attempts\n",attempt);
                     System.out.println("Your Password is wrong Please enter your correct Password");
                     System.out.println("Enter Your Password:");
                     In_pass=scanner.nextLine();
-                    attempt++;
                     if(attempt==3){
-                        System.out.printf("%d No of Attempts",attempt);
-                        System.out.println("You try to login More the 3 times so \n \t Please Try to Login Later");
-                    }
-                    else if (attempt<3){
-                        System.out.printf("%d No of Attempts\n",attempt);
+                        System.out.println("You try to login 3 times So \n \t Please Try to Login Later");
+                        break;
                     }
                 }
             }
@@ -39,6 +36,7 @@ public class Admin{
         }
     }
     public void ADLogin(){
+        Customer AddCust=null;
         boolean runAD=true;
         while(runAD){
             System.out.println("1.Add User Account");
@@ -47,11 +45,11 @@ public class Admin{
             System.out.println("4.View all Account");
             System.out.println("5.Exit");
             System.out.println("Enter the Choice:");
-            int choice = Integer.parseInt(scanner.nextLine());
+                int choice = Integer.parseInt(scanner.nextLine());
             switch (choice){
                 case 1->{
                     System.out.println("Creating Customer");
-                    customArray.add(Add_user());
+                    Add_user();
                 }
                 case 2->{
                     System.out.println("Deleting User");
@@ -61,7 +59,10 @@ public class Admin{
                 }
                 case 4->{
                         System.out.println("Customer Account:");
-                        this.ViewArray(customArray);               // calling View Customer
+                    System.out.println("\nAll Customers:");
+                    for (Customer customer :this.AC) {
+                        System.out.println(customer);
+                    }
                     }
 
                 case 5->{
@@ -74,21 +75,18 @@ public class Admin{
             }
         }
     }
-    public Customer Add_user()
-    {
-        System.out.println("Enter Customer ID:");
-        String cus_ID=scanner.nextLine();
-        System.out.println("Enter Customer Password:");
-        String cus_pass=scanner.nextLine();
-        System.out.println("Enter Customer Name:");
-        String cus_name=scanner.nextLine();
-        Customer customer=new Customer(cus_ID,cus_pass,cus_name);
-        System.out.println("Customer is created");
-        return customer;
-    }
-    public void ViewArray(ArrayList<Customer> customers)
-    {
-        for (Customer customer : customers) {
+
+    private void Add_user() {
+        System.out.println("Enter the Customer ID:");
+        String ID =scanner.nextLine();
+        System.out.println("Enter the Customer Pass:");
+        String Pass =scanner.nextLine();
+        System.out.println("Enter the Customer Name:");
+        String Name =scanner.nextLine();
+        Customer cus =new Customer(ID,Pass,Name);
+        AC.add(cus);
+        System.out.println("\nAll Customers:");
+        for (Customer customer : AC) {
             System.out.println(customer);
         }
     }
