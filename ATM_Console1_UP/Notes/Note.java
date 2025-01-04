@@ -25,7 +25,8 @@ public class Note implements Cloneable {
         return count;
     }
 
-    // Clone the Note object to store in New 
+    // Clone the Note object to store in New address 
+    //Used for DeepCopy
     @Override
     public Note clone() throws CloneNotSupportedException {
         return (Note) super.clone(); // Create and return a copy of the object
