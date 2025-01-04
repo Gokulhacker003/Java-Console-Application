@@ -3,45 +3,45 @@ import Notes.Note;
 import java.util.ArrayList;
 
 public class Customer_Action {
-    public static Customer login(ArrayList<Customer> customers) {
-        Customer custom=new Customer();
+    public static Account login(ArrayList<Account> Acc) { // Customer login
+        Customer custom=new Customer();// Create Empty Customer
         System.out.println("Enter Your ID:");
-        String id = ATM_OP.getSc().nextLine();
-        int attempt =0;
-        for (Customer cus :customers) {
-            while (attempt<3){
-                if(cus.getID().equals(id)){
-                    System.out.println("Enter Your Password:");
-                    String pass =ATM_OP.getSc().nextLine();
-                    if (cus.getPassword().equals(pass)) {
-                        custom=cus;
-                        break;
-                    }
-                    else{
-                        ++attempt;
-                        System.out.println("Entered Password is wrong");
-                        if (attempt == 3) {
-                            System.out.println("Your Account is locked");
-                            custom=null;
+        String id = ATM_OP.getSc().nextLine(); // getting id from user
+        int attempt =0; //It stores the password attempt
+        for(Account acc :Acc) {//Its is getting the Account details use loop
+            if(acc instanceof Customer) {//It Checks the index of Acc is Customer
+                while (attempt < 3) {//if password is wrong runs Until the 3 attempt
+                    if (acc.getId().equals(id)) {//It checks Input id and user id
+                        System.out.println("Enter Your Password:");
+                        String pass = ATM_OP.getSc().nextLine();// It gets the pass
+                        if (acc.getPass().equals(pass)) {//It checks the Password is right
+                            custom = (Customer) acc;// it right customer account the
+                            break;
+                        } else {
+                            ++attempt;
+                            System.out.println("Entered Password is wrong");
+                            if (attempt == 3) {
+                                System.out.println("Your Account is locked");
+                                custom = null;// if 3 attempt is completed it the null Customer
+                            }
                         }
-                    }
-                }
-                else{
+                    } else {
 
-                    return custom;
+                        return custom;
+                    }
                 }
             }
         }
         return custom;
     }
-    public static void changePassword(String uid, String oldPassword) {
-        Customer customer = ATM_OP.getCusID(uid);
+    public static void changePassword(String uid, String oldPassword) { // it is Used to Change the password of Customer
+        Customer customer = (Customer) ATM_OP.getAccID(uid);
         if (customer != null) {
-            if (customer.getPassword().equals(oldPassword)) {
+            if (customer.getPass().equals(oldPassword)) {
                 System.out.println("Enter your new password:");
                 String newPassword = ATM_OP.getSc().nextLine();
-                if(!customer.getPassword().equals(newPassword)) {
-                    customer.setPassword(newPassword);
+                if(!customer.getPass().equals(newPassword)) {
+                    customer.setPass(newPassword);
                     System.out.println("Password changed successfully!");
                 }
                 else{
@@ -55,10 +55,10 @@ public class Customer_Action {
         }
     }
     public static void addTransaction(Transaction trans,Customer cus){
-        cus.getTransHistory().add(trans);
+        cus.getTransactions().add(trans);
     }
 
-    public static void depositAmt ( Customer customer){
+    public static void depositAmt (Customer customer){
         long Amount=Long.parseLong(ATM_OP.getSc().nextLine());
         System.out.println("2000₹ =");
         int Rs2000_count =Integer.parseInt(ATM_OP.getSc().nextLine());
@@ -87,8 +87,9 @@ public class Customer_Action {
                         break;
                 }
             }
+
             customer.setBalance(customer.getBalance() + Amount);
-            addTransaction(new Transaction(customer.getID(), "Deposit", Amount, customer.getBalance()), customer);
+            addTransaction(new Transaction(customer.getId(), "Deposit", Amount, customer.getBalance()), customer);
             ATM_OP.setATMBalance((ATM_OP.getATMBalance() + Amount));
         }
         else{
@@ -120,7 +121,7 @@ public class Customer_Action {
                 for (String notes:Note_tr){
                     System.out.println("* "+notes);
                 }
-                addTransaction(new Transaction(customer.getID(), "Withdrawal", finalAmt, customer.getBalance()), customer);
+                addTransaction(new Transaction(customer.getId(), "Withdrawal", finalAmt, customer.getBalance()), customer);
                 break;
             }
             else{
