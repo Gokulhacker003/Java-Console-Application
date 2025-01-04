@@ -15,6 +15,6 @@ public class Transaction {
     // Returns transaction details as a string
     @Override
     public String toString() {
-        return String.format("ID:%s, Type:%s, Amount:%d, Balance:%d", id, type, amount, balance); //Using to retrun the Value as String 
+        return String.format("ID:%s, Type:%s, Amount:%d, Balance:%d", id, type, amount, balance);
     }
 }
