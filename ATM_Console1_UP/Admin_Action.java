@@ -4,30 +4,32 @@ import java.util.ArrayList;
 public class Admin_Action {
 
     // Method for admin login
-    public static Admin login(ArrayList<Admin> adminList) {
-        Admin loggedInAdmin = new Admin();//
+    public static Account login(ArrayList<Account> adminList) {
+        Admin loggedInAdmin=null;
         System.out.println("Enter ID:");
-        String adminId = ATM_OP.getSc().nextLine();// Is get ID from Console 
-        int attempts = 0; // it store an Attempt of Password
+        String adminId = ATM_OP.getSc().nextLine();
+        int attempts = 0;
 
-        for (Admin admin : adminList) { // it is used to Check the admin ID & Pass
-            while (attempts < 3) {// It is used to to check the attempt
-                if (admin.getAdminId().equals(adminId)) {//it check admin id
-                    System.out.println("Enter Your Password:");
-                    String password = ATM_OP.getSc().nextLine();
-                    if (admin.getAdminPass().equals(password)) {//
-                        loggedInAdmin = admin;
-                        return loggedInAdmin;
-                    } else {
-                        attempts++;
-                        System.out.println("Incorrect Password.");
-                        if (attempts == 3) {
-                            System.out.println("Your Account is Locked.");
+        for (Account adminAcc : adminList) {
+            if (adminAcc instanceof Admin){
+                while (attempts < 3) {
+                    if (adminAcc.getId().equals(adminId)) {
+                        System.out.println("Enter Your Password:");
+                        String password = ATM_OP.getSc().nextLine();
+                        if (adminAcc.getPass().equals(password)) {
+                            loggedInAdmin = (Admin) adminAcc;
+                            break;
+                        } else {
+                            attempts++;
+                            System.out.println("Incorrect Password.");
+                            if (attempts == 3) {
+                                System.out.println("Your Account is Locked.");
+                            }
                         }
+                    } else {
+                        System.out.println("Admin Not Found.");
+                        return new Admin();
                     }
-                } else {
-                    System.out.println("Admin Not Found.");
-                    return new Admin();
                 }
             }
         }
@@ -40,10 +42,12 @@ public class Admin_Action {
         String userId = ATM_OP.getSc().nextLine();
         boolean userExists = false;
 
-        for (Customer customer : ATM_OP.getCustList()) {
-            if (customer.getID().equals(userId)) {
-                userExists = true;
-                break;
+        for (Account customerAcc : ATM_OP.getAccDT()) {
+            if (customerAcc instanceof Customer){
+                if (customerAcc.getId().equals(userId)) {
+                    userExists = true;
+                    break;
+                }
             }
         }
 
@@ -55,11 +59,11 @@ public class Admin_Action {
             System.out.println("Enter Customer Name:");
             String name = ATM_OP.getSc().nextLine();
 
-            Customer newCustomer = new Customer(userId, password, name);
+            Account newCustomer = new Customer(userId, password, name);
             ATM_OP.addCustomer(newCustomer);
 
             System.out.println("Enter the Initial Amount:");
-            Customer_Action.depositAmt(newCustomer);
+            Customer_Action.depositAmt((Customer) newCustomer);
 
             System.out.println("Customer Added Successfully!");
         }
@@ -67,48 +71,51 @@ public class Admin_Action {
 
     // Method to delete a user
     public static void deleteUser(String userId) {
-        Customer customer = ATM_OP.getCusID(userId);
-        if (customer != null) {
-            ATM_OP.getCustList().remove(customer);
-            ATM_OP.setATMBalance(ATM_OP.getATMBalance() - customer.getBalance());
-            System.out.println("Customer Deleted Successfully.");
-        } else {
-            System.out.println("Customer Not Found.");
+        {
+            Customer customer = (Customer) ATM_OP.getAccID(userId);
+            if (customer != null) {
+                ATM_OP.getAccDT().remove(customer);
+                ATM_OP.setATMBalance(ATM_OP.getATMBalance() - customer.getBalance());
+                System.out.println("Customer Deleted Successfully.");
+            } else {
+                System.out.println("Customer Not Found.");
+            }
         }
     }
 
     // Method to view all customer accounts
     public static void viewAllAccounts() {
-        ArrayList<Customer> customers = ATM_OP.getCustList();
-        if (customers.isEmpty()) {
-            System.out.println("No Accounts Found.");
-        } else {
-            for (Customer customer : customers) {
-                System.out.println("Customer Account Details:");
-                System.out.println("ID: " + customer.getID());
-                System.out.println("Name: " + customer.getName());
-                System.out.println("-------------------------------");
+    for(Account acc:ATM_OP.getAccDT()){
+        if (acc instanceof Customer customers) {
+            System.out.println("Customer Account Details:");
+            System.out.println("ID: " + customers.getId());
+            System.out.println("Name: " + customers.getName());
+            System.out.println("-------------------------------");
             }
+        else if (!(acc instanceof Customer)&&(acc instanceof Admin)) {
+            System.out.println();
         }
+    }
     }
 
     // Method to view all transactions
     public static void viewAllTransactions() {
-        ArrayList<Customer> customers = ATM_OP.getCustList();
-        if (customers.isEmpty()) {
-            System.out.println("No Users Found.");
-        } else {
-            for (Customer customer : customers) {
-                System.out.println("Transaction History for " + customer.getName() + ":");
-                ArrayList<Transaction> transactions = customer.getTransHistory();
-                if (transactions.isEmpty()) {
-                    System.out.println("No Transactions Found.");
-                } else {
-                    for (Transaction transaction : transactions) {
-                        System.out.println(transaction);
+        for (Account accCus : ATM_OP.getAccDT()){
+            if (!(accCus instanceof Customer)&&!(accCus instanceof Admin)) {
+                System.out.println("No Users Found.");
+            } else if(accCus instanceof Customer customer) {
+                {
+                    System.out.println("Transaction History for " + accCus.getName() + ":");
+                    ArrayList<Transaction> transactions =customer.getTransactions();
+                    if (transactions.isEmpty()) {
+                        System.out.println("No Transactions Found.");
+                    } else {
+                        for (Transaction transaction : transactions) {
+                            System.out.println(transaction);
+                        }
                     }
+                    System.out.println("-------------------------------");
                 }
-                System.out.println("-------------------------------");
             }
         }
     }
@@ -138,7 +145,7 @@ public class Admin_Action {
                 }
             }
             ATM_OP.setATMBalance(ATM_OP.getATMBalance() + amount);
-            addAdTransaction(new Transaction(admin.getAdminId(), "Deposit", amount, ATM_OP.getATMBalance()));
+            addAdTransaction(new Transaction(admin.getId(), "Deposit", amount, ATM_OP.getATMBalance()),admin);
             System.out.println("Amount Deposited Successfully!");
         } else {
             System.out.println("Please Check the Denomination.");
@@ -146,7 +153,7 @@ public class Admin_Action {
     }
 
     // Method to add a transaction to the admin's transaction list
-    public static void addAdTransaction(Transaction transaction) {
-        Admin.getAdTransaction().add(transaction);
+    public static void addAdTransaction(Transaction transaction,Admin admin) {
+        admin.getTransactions().add(transaction);
     }
 }
