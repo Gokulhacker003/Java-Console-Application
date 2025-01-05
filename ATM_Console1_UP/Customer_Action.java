@@ -136,18 +136,18 @@ public class Customer_Action {
         }
     }
 
-     public static double perform_Withdrawal(double Amount,ArrayList<String> note_Tr,Note note){
-        long count =(long) (Amount/Long.parseLong(note.getNote()));
-        if (Long.parseLong(note.getNote())<=Amount&& note.getCount()>0){
-            if (count<= note.getCount()) {
-                Amount = Amount - (count * Long.parseLong(note.getNote()));
-                note.setCount(note.getCount() - count);
-                note_Tr.add("You got " + note.getNote() + " count " + count);
+     public static double perform_Withdrawal(double Amount,ArrayList<String> note_Tr,Note note){//It is used calculate the withdrawal denomination
+        long count =(long) (Amount/Long.parseLong(note.getNote()));// it is used to store the denomination count for withdrawal amount 
+        if (Long.parseLong(note.getNote())<=Amount&& note.getCount()>0){// it check the denomination and and those count is greater than 0
+            if (count<= note.getCount()) {//if count is greater than or equal to denomination count
+                Amount = Amount - (count * Long.parseLong(note.getNote()));//reduce the amount and store it 
+                note.setCount(note.getCount() - count);//set the note's count
+                note_Tr.add("You got " + note.getNote() + " count " + count);//add it on notes transaction
             }
             else {
-                Amount = Amount - (note.getCount() * Long.parseLong(note.getNote()));
-                note.setCount(0);
-                note_Tr.add("You got " + note.getNote() + " count " + count);
+                Amount = Amount - (note.getCount() * Long.parseLong(note.getNote()));//reduce the amount and store it
+                note.setCount(0);//set the note's count
+                note_Tr.add("You got " + note.getNote() + " count " + count);//add it on notes transaction
             }
             return Amount;
         }
