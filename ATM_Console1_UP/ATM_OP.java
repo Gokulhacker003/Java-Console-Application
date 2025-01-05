@@ -200,7 +200,7 @@ public class ATM_OP {
                                     System.out.println("Enter the Deposit Amount");
                                     Customer_Action.depositAmt(cust);
                                     break;
-                                case 4: // View transaction history
+                                case 4: // View transaction history of particular user
                                     if (!cust.getTransactions().isEmpty()) {
                                         System.out.println("Transaction history:");
                                         for (Transaction transact : cust.getTransactions()) {
