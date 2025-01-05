@@ -6,7 +6,7 @@ public class Customer_Action {
     public static Account login(ArrayList<Account> Acc) { // Customer login
         Customer custom=new Customer();// Create Empty Customer
         System.out.println("Enter Your ID:");
-        String id = ATM_OP.getSc().nextLine(); // getting id from user
+        String id = ATM_OP.getSc().nextLine(); //getting id from user
         int attempt =0; //It stores the password attempt
         for(Account acc :Acc) {//Its is getting the Account details use loop
             if(acc instanceof Customer) {//It Checks the index of Acc is Customer
