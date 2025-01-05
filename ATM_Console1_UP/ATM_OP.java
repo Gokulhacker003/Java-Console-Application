@@ -8,7 +8,7 @@ public class ATM_OP {
     // Balance of the ATM
     private static long balance;
 
-    // List of admins
+    //List of admins
     private static ArrayList<Account> AccDT=new ArrayList<>();
 
     // List of currency notes
